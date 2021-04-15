@@ -10,22 +10,20 @@
 int main(int argc, char** argv) {
     QCoreApplication app(argc, argv);
 
-    std::ios_base::Init init;
-
     if (argc < 3) {
-        std::cout << "Not enough parameters. Needs input and output filepath.";
+        std::cout << "Not enough parameters. Needs input and output filepath." << std::endl;;
         return -1;
     }
 
     QFile file(argv[1]);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        std::cout << "Error opening input file: " << file.errorString().toStdString();
+        std::cout << "Error opening input file: " << file.errorString().toStdString() << std::endl;;
         return -1;
     }
     auto coorData = std::make_unique<coordata>();
     coorData->mandant(QStringLiteral("coor").toStdWString());
-    coorData->name(QStringLiteral("Kontakte aus CRM").toStdWString());
+    coorData->name(QStringLiteral("Kontakte aus Datev").toStdWString());
     coorData->version(QStringLiteral("3.3").toStdWString());
     coorData->external(QStringLiteral("CRM").toStdWString());
     coordata::bkm_contact_sequence contacts;
@@ -87,7 +85,7 @@ int main(int argc, char** argv) {
 
             for (const auto key : columns.uniqueKeys()) {
                 if (columns[key] < 0) {
-                    std::cout << "Column not found in input file: " << key.toStdString();
+                    std::cout << "Column not found in input file: " << key.toStdString() << std::endl;;
                     return -1;
                 }
             }
@@ -121,7 +119,7 @@ int main(int argc, char** argv) {
     auto result = QString::fromStdString(stream.str());
     QFile out(argv[2]);
     if (!out.open(QIODevice::WriteOnly)) {
-        std::cout << "Error opening output file: " << out.errorString().toStdString();
+        std::cout << "Error opening output file: " << out.errorString().toStdString() << std::endl;;
         return -1;
     }
     out.write(result.toUtf8());
