@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
 
     auto result = QString::fromStdString(stream.str());
     QFile out(argv[2]);
-    if (!out.open(QIODevice::WriteOnly)) {
+    if (!out.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         std::cout << "Error opening output file: " << out.errorString().toStdString() << std::endl;;
         return -1;
     }
