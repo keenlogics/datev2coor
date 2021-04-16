@@ -9,18 +9,40 @@
 
 int main(int argc, char** argv) {
     QCoreApplication app(argc, argv);
+    app.setApplicationName("Datev2Coor");
+    app.setOrganizationName("keenlogics gmbh");
+    app.setApplicationVersion("1.0.0");
 
-    if (argc < 3) {
-        std::cout << "Not enough parameters. Needs input and output filepath." << std::endl;;
-        return -1;
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Datev2Coor");
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    QCommandLineOption inputFileOption({ "i", "input-file" }, "Specify the file path to the DATEV input file", "path");
+    parser.addOption(inputFileOption);
+
+    QCommandLineOption outputFileOption({ "o", "output-file" }, "Specify the file path to the COOR output file", "path");
+    parser.addOption(outputFileOption);
+
+    parser.process(app);
+
+    if (!parser.isSet(inputFileOption)) {
+        std::cout << "Missing input file path" << std::endl;
+        return 1;
+    } else if (!parser.isSet(outputFileOption)) {
+        std::cout << "Missing output file path" << std::endl;
+        return 1;
     }
 
-    QFile file(argv[1]);
+    const QString inputFilePath = parser.value(inputFileOption);
+    const QString outputFilePath = parser.value(outputFileOption);
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        std::cout << "Error opening input file: " << file.errorString().toStdString() << std::endl;;
-        return -1;
+    QFile inputFile(inputFilePath);
+    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        std::cout << QStringLiteral("Error opening input file '%0': %1").arg(inputFilePath, inputFile.errorString()).toStdString() << std::endl;
+        return 1;
     }
+
     auto coorData = std::make_unique<coordata>();
     coorData->mandant(QStringLiteral("coor").toStdWString());
     coorData->name(QStringLiteral("Kontakte aus Datev").toStdWString());
@@ -28,7 +50,7 @@ int main(int argc, char** argv) {
     coorData->external(QStringLiteral("CRM").toStdWString());
     coordata::bkm_contact_sequence contacts;
 
-    QTextStream in(&file);
+    QTextStream in(&inputFile);
     bool firstline = true;
 
     const auto konto = QStringLiteral("Konto");
@@ -86,7 +108,7 @@ int main(int argc, char** argv) {
             for (const auto key : columns.keys()) {
                 if (columns[key] < 0) {
                     std::cout << "Column not found in input file: " << key.toStdString() << std::endl;;
-                    return -1;
+                    return 1;
                 }
             }
             firstline = false;
@@ -116,13 +138,16 @@ int main(int argc, char** argv) {
     std::ostringstream stream;
     coordata_(stream, *coorData);
 
-    auto result = QString::fromStdString(stream.str());
-    QFile out(argv[2]);
-    if (!out.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        std::cout << "Error opening output file: " << out.errorString().toStdString() << std::endl;;
-        return -1;
+    const QString result = QString::fromStdString(stream.str());
+    QFile outputFile(outputFilePath);
+    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        std::cout << QStringLiteral("Error opening output file '%0': %1").arg(outputFilePath, outputFile.errorString()).toStdString() << std::endl;
+        return 1;
     }
-    out.write(result.toUtf8());
+    if (outputFile.write(result.toUtf8()) < 0) {
+        std::cout << "Unable to write result to output file: " << outputFile.errorString().toStdString() << std::endl;
+    }
+    outputFile.close();
 
     return 0;
 }
