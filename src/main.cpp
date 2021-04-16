@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
             columns[internet] = line.indexOf(internet);
             columns[suchname] = line.indexOf(suchname);
 
-            for (const auto key : columns.uniqueKeys()) {
+            for (const auto key : columns.keys()) {
                 if (columns[key] < 0) {
                     std::cout << "Column not found in input file: " << key.toStdString() << std::endl;;
                     return -1;
