@@ -65,7 +65,6 @@ int main(int argc, char** argv) {
     const auto tel = QStringLiteral("Telefon");
     const auto email = QStringLiteral("E-Mail");
     const auto sonst = QStringLiteral("Sonstige");
-    const auto kundennr = QStringLiteral("Kunden-/Lief.-Nr.");
     const auto ustid = QStringLiteral("EU-UStID");
     const auto anrede = QStringLiteral("Anrede");
     const auto fax = QStringLiteral("Fax");
@@ -98,7 +97,6 @@ int main(int argc, char** argv) {
             columns[tel] = line.indexOf(tel);
             columns[email] = line.indexOf(email);
             columns[sonst] = line.indexOf(sonst);
-            columns[kundennr] = line.indexOf(kundennr);
             columns[ustid] = line.indexOf(ustid);
             columns[anrede] = line.indexOf(anrede);
             columns[fax] = line.indexOf(fax);
@@ -114,7 +112,9 @@ int main(int argc, char** argv) {
             firstline = false;
         } else {
             bkm_contact contact(line[columns[konto]].toStdWString());
-            contact.keyid(line[columns[kundennr]].toStdWString());
+            contact.controlcode(QStringLiteral("ui").toStdWString());
+            contact.keyid(line[columns[konto]].toStdWString());
+            contact.matchfield(QStringLiteral("keyid").toStdWString());
             contact.externalkey(line[columns[konto]].toStdWString());
             contact.synonym(line[columns[nameKurz]].toStdWString());
             contact.name1(line[columns[nameFirma]].toStdWString());
