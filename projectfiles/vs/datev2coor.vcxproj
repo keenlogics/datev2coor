@@ -58,11 +58,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <QtInstall>qt-5.10-x86</QtInstall>
+    <QtInstall>qt-5.15-x86</QtInstall>
     <QtModules>core</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <QtInstall>qt-5.10-x86</QtInstall>
+    <QtInstall>qt-5.15-x86</QtInstall>
     <QtModules>core</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -87,7 +87,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(CppLibrariesDir)/xerces-c-3.2.3/lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CppLibrariesDir)/xerces-c-3.2.3/lib;$(QTDIR)/lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>qtmain$(DebugSuffix).lib;xerces-c_3$(DebugSuffix).lib;Qt5Core$(DebugSuffix).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -113,7 +113,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(CppLibrariesDir)/xerces-c-3.2.3/lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CppLibrariesDir)/xerces-c-3.2.3/lib;$(QTDIR)/lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalDependencies>qtmain$(DebugSuffix).lib;xerces-c_3$(DebugSuffix).lib;Qt5Core$(DebugSuffix).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
